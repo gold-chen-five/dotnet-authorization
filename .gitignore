@@ -1,0 +1,77 @@
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Compiled output
+bin/
+obj/
+
+# NuGet Packages
+*.nupkg
+*.paket.restore.csproj
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Ll]og/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
+
+# Visual Studio 2017/2019 project files
+*/[Oo]bj/
+*/[Bb]in/
+# Auto generated .vscode settings
+.vscode/
+# Rider
+.idea/
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Ll]og/
+[Ll]ogs/
+# ASP.NET Scaffolding
+GeneratedArtifacts/
+# Project-specific files
+*.BoyerMoore
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+# Visual Studio Trace Files
+*.e2e
+
+# Tye
+.tye/
