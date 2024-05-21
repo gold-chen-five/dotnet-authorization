@@ -1,2 +1,2 @@
 ## store the dependency:
-  ## dotnet restore
+  - dotnet restore
