@@ -1,5 +1,5 @@
 
-namespace Test.Token
+namespace Token
 {
     public readonly struct Payload(Guid ID, string Username, DateTime IssuedAt, DateTime ExpiresAt)
     {

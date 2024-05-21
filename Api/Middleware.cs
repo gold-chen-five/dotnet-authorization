@@ -1,14 +1,11 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
-namespace Test.Api
+namespace Api
 {
-    public static class Middleware
+    public static class Middleware 
     {
-        public static void SetupMiddleware(this WebApplication app)
+        public static void SetupMiddleware(this Server.ServerType server)
         {
-            app.Use(AuthorizationMiddleware);
+            server.App.MapWhen(context => context.Request.Path.StartsWithSegments("/api"), api => api.Use(AuthorizationMiddleware));
         }
 
         private static async Task AuthorizationMiddleware(HttpContext context, RequestDelegate next)
@@ -28,13 +25,9 @@ namespace Test.Api
             }
 
             var token = authHeader.ToString().Split(" ")[1].Trim();
-
-            // Do something with the token (e.g., log it, validate it, etc.)
             context.Items["BearerToken"] = token;
 
             await next(context);
         }
-
-        
     }
 }

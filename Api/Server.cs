@@ -1,16 +1,30 @@
-namespace Test.Api
+
+namespace Api
 {
     public static class Server
     {
-        public readonly struct Payload(Guid ID, string Username, DateTime IssuedAt, DateTime ExpiresAt)
+        public struct ServerType(WebApplication app, Token.IMaker tokenMaker)
         {
-            public Guid ID { get; } = ID;
-            public string Username { get; } = Username;
-            public DateTime IssuedAt { get; } = IssuedAt;
-            public DateTime ExpiresAt { get; } = ExpiresAt;
+            public WebApplication App { get; set;} = app;
+            public Token.IMaker TokenMaker { get; set;} = tokenMaker;
         }
 
-        public static WebApplication NewServer(string[] args)
+        public static ServerType NewServer(string[] args)
+        {
+           
+            string symmetricKey = "12345678901234567890123456789012";
+           
+            var tokenMaker = new Token.PasetoMaker(symmetricKey);
+            
+            var app = SetupApp(args);
+            ServerType server = new(app,tokenMaker);
+
+            server.SetupSwagger();
+            server.SetupRouter();
+            return server;
+        }
+
+        private static WebApplication SetupApp(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -19,26 +33,37 @@ namespace Test.Api
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
             app.UseHttpsRedirection();
 
             return app;
         }
 
-        public static void SetupRouter(this WebApplication app)
+        private static void SetupSwagger(this ServerType server)
         {
-            RouteGroupBuilder apiRouter = app.MapGroup("/api");
-            apiRouter.MapGet("/test", () =>
+            // Configure the HTTP request pipeline.
+            var app = server.App;
+            if (app.Environment.IsDevelopment())
             {
-                return TypedResults.Ok("test");
-            });
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+        }
 
+        private static void SetupRouter(this ServerType server)
+        {
+            // No Auth router
+            server.App.MapPost("/login-user",async context => await User.LoginUser(server, context.Request));
+
+            // Api has auth 
+            RouteGroupBuilder apiRouter = server.App.MapGroup("/api");
+            apiRouter.MapGet("/test",() => {
+                return Results.Ok("Test endpoint reached successfully.");
+            });
+        }
+
+        public static void Start(this ServerType server)
+        {
+            server.App.Run();
         }
 
     }

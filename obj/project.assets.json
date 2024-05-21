@@ -595,24 +595,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\潘宗諭\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\code\\dotnet\\Test\\Test.csproj",
-      "projectName": "Test",
-      "projectPath": "D:\\code\\dotnet\\Test\\Test.csproj",
-      "packagesPath": "C:\\Users\\潘宗諭\\.nuget\\packages\\",
-      "outputPath": "D:\\code\\dotnet\\Test\\obj\\",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\work\\dotnet\\dotnet-authorization\\Main.csproj",
+      "projectName": "Main",
+      "projectPath": "C:\\Users\\user\\Desktop\\work\\dotnet\\dotnet-authorization\\Main.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\work\\dotnet\\dotnet-authorization\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\潘宗諭\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

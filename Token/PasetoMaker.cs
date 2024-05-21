@@ -3,7 +3,7 @@ using System.Text.Json;
 using Paseto;
 using Paseto.Builder;
 
-namespace Test.Token
+namespace Token
 {
     public class PasetoMaker : IMaker
     {
@@ -14,11 +14,15 @@ namespace Test.Token
         public PasetoMaker(string symmetricKey)
         {
             var seed = Encoding.UTF8.GetBytes(symmetricKey);
+            if(seed.Length != 32)
+            {
+                throw new Exception("seed length should be 32 length !");
+            }
             _pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
             _pasetoKey = _pasetoBuilder.GenerateAsymmetricKeyPair(seed);
         }
 
-        public async Task<(string, Payload)> CreateTokenAsync(string username, TimeSpan duration)
+        public (string, Payload) CreateToken(string username, TimeSpan duration)
         {
             // create payload
             Payload payload = PayloadUtility.NewPayload(username, duration);
@@ -35,7 +39,7 @@ namespace Test.Token
             return (token, payload);
         }
 
-        public async Task<Payload> VerifyTokenAsync(string token)
+        public Payload VerifyToken(string token)
         {
             var valParams = new PasetoTokenValidationParameters
             {
