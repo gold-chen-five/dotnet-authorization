@@ -3,23 +3,21 @@ using System.Text.Json;
 using Paseto;
 using Paseto.Builder;
 
-namespace Token
+namespace Token.PasetoMaker
 {
     public class PasetoMaker : IMaker
     {
         private readonly Paseto.Cryptography.Key.PasetoAsymmetricKeyPair _pasetoKey;
 
-        private readonly PasetoBuilder _pasetoBuilder;
-
         public PasetoMaker(string symmetricKey)
         {
             var seed = Encoding.UTF8.GetBytes(symmetricKey);
-            if(seed.Length != 32)
+            if (seed.Length != 32)
             {
                 throw new Exception("seed length should be 32 length !");
             }
-            _pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
-            _pasetoKey = _pasetoBuilder.GenerateAsymmetricKeyPair(seed);
+            var pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
+            _pasetoKey = pasetoBuilder.GenerateAsymmetricKeyPair(seed);
         }
 
         public (string, Payload) CreateToken(string username, TimeSpan duration)
@@ -28,8 +26,9 @@ namespace Token
             Payload payload = PayloadUtility.NewPayload(username, duration);
 
             // create token
-            var token = _pasetoBuilder
-                .WithKey(_pasetoKey.PublicKey)
+            var pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
+            var token = pasetoBuilder
+                .WithKey(_pasetoKey.SecretKey)
                 .Subject(payload.ID.ToString())
                 .IssuedAt(payload.IssuedAt)
                 .Expiration(payload.ExpiresAt)
@@ -47,7 +46,8 @@ namespace Token
                 ValidateSubject = true,
             };
 
-            var result = _pasetoBuilder
+            var pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
+            var result = pasetoBuilder
                 .WithKey(_pasetoKey.PublicKey)
                 .Decode(token, valParams);
 

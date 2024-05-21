@@ -1,26 +1,28 @@
+using Token;
+using Token.PasetoMaker;
 
 namespace Api
 {
-    public static class Server
+    public struct Server(WebApplication app, IMaker tokenMaker)
     {
-        public struct ServerType(WebApplication app, Token.IMaker tokenMaker)
-        {
-            public WebApplication App { get; set;} = app;
-            public Token.IMaker TokenMaker { get; set;} = tokenMaker;
-        }
+        public WebApplication App { get; set; } = app;
+        public IMaker TokenMaker { get; set; } = tokenMaker;
+    }
 
-        public static ServerType NewServer(string[] args)
+    public static class App
+    {
+        public static Server NewServer(string[] args)
         {
-           
             string symmetricKey = "12345678901234567890123456789012";
-           
-            var tokenMaker = new Token.PasetoMaker(symmetricKey);
-            
-            var app = SetupApp(args);
-            ServerType server = new(app,tokenMaker);
 
-            server.SetupSwagger();
+            var tokenMaker = new PasetoMaker(symmetricKey);
+
+            var app = SetupApp(args);
+            Server server = new(app, tokenMaker);
             server.SetupRouter();
+            server.SetupSwagger();
+            server.SetupMiddleware();
+
             return server;
         }
 
@@ -38,7 +40,7 @@ namespace Api
             return app;
         }
 
-        private static void SetupSwagger(this ServerType server)
+        public static void SetupSwagger(this Server server)
         {
             // Configure the HTTP request pipeline.
             var app = server.App;
@@ -49,22 +51,20 @@ namespace Api
             }
         }
 
-        private static void SetupRouter(this ServerType server)
+        public static void SetupRouter(this Server server)
         {
             // No Auth router
-            server.App.MapPost("/login-user",async context => await User.LoginUser(server, context.Request));
+            server.App.MapPost("/login-user", ctx => server.LoginUser(ctx));
 
             // Api has auth 
             RouteGroupBuilder apiRouter = server.App.MapGroup("/api");
-            apiRouter.MapGet("/test",() => {
-                return Results.Ok("Test endpoint reached successfully.");
-            });
+            apiRouter.MapGet("/test", User.TestUser);
         }
 
-        public static void Start(this ServerType server)
+        public static void Start(this Server server)
         {
             server.App.Run();
         }
-
     }
+
 }

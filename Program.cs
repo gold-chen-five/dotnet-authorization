@@ -1,5 +1,5 @@
 using Api;
 
-var server = Server.NewServer(args);
-server.SetupMiddleware();
+var server = App.NewServer(args);
+
 server.Start();
