@@ -35,7 +35,7 @@ namespace Api
 
             var app = builder.Build();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             return app;
         }
