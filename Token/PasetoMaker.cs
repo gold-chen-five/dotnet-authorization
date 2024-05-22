@@ -40,10 +40,14 @@ namespace Token.PasetoMaker
 
         public Payload VerifyToken(string token)
         {
+            if(string.IsNullOrEmpty(token))
+            {
+                throw new Exception("Token validation failed.");
+            }
+
             var valParams = new PasetoTokenValidationParameters
             {
                 ValidateLifetime = true,
-                ValidateSubject = true,
             };
 
             var pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
@@ -58,8 +62,11 @@ namespace Token.PasetoMaker
 
             // Deserialize the PasetoPayload into Payload
             var pasetoPayload = result.Paseto.Payload;
+            
             var payloadJson = JsonSerializer.Serialize(pasetoPayload);
+            Console.WriteLine(payloadJson);
             var payload = JsonSerializer.Deserialize<Payload>(payloadJson);
+            //var payload = JsonSerializer.Deserialize<Payload>(payloadJson);
 
             return payload;
         }

@@ -5,13 +5,13 @@ namespace Api
     {
         public static void SetupMiddleware(this Server server)
         {
-            server.App.MapWhen(
+            server.App.UseWhen(
                 context => context.Request.Path.StartsWithSegments("/api"),
-                api => api.Use(AuthorizationMiddleware)
+                app => app.Use((ctx, next) => server.AuthorizationMiddleware(ctx, next))
             );
         }
 
-        private static async Task AuthorizationMiddleware(HttpContext ctx, RequestDelegate next)
+        private static async Task AuthorizationMiddleware(this Server server, HttpContext ctx, RequestDelegate next)
         {
             if (!ctx.Request.Headers.TryGetValue("Authorization", out var authHeader))
             {
@@ -26,7 +26,20 @@ namespace Api
             }
 
             var token = authHeader.ToString().Split(" ")[1].Trim();
-            ctx.Items["BearerToken"] = token;
+
+            // verify token
+            try
+            {
+                var payload = server.TokenMaker.VerifyToken(token);
+                Console.WriteLine(payload.Username);
+            }
+            catch(Exception err)
+            {
+                Console.WriteLine(err);
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Token not correct");
+                return;
+            }
+            
 
             await next(ctx);
         }

@@ -54,11 +54,11 @@ namespace Api
         public static void SetupRouter(this Server server)
         {
             // No Auth router
-            server.App.MapPost("/login-user", ctx => server.LoginUser(ctx));
+            server.App.MapPost("/login-user", (HttpResponse response, HttpContext ctx) => server.LoginUser(response, ctx));
 
             // Api has auth 
             RouteGroupBuilder apiRouter = server.App.MapGroup("/api");
-            apiRouter.MapGet("/test", User.TestUser);
+            apiRouter.MapGet("/test", (HttpResponse response, HttpContext ctx) => server.TestUser(response, ctx));
         }
 
         public static void Start(this Server server)

@@ -8,7 +8,7 @@ namespace Api
 
         public record LoginResponse(string Token, Payload Payload);
 
-        public static async Task LoginUser(this Server server, HttpContext ctx)
+        public static async Task LoginUser(this Server server, HttpResponse response, HttpContext ctx)
         {
             var body = await ctx.Request.ReadFromJsonAsync<LoginBody>();
             if (body is null)
@@ -18,7 +18,7 @@ namespace Api
             }
 
             // create token
-            TimeSpan duration = TimeSpan.FromMinutes(15);
+            TimeSpan duration = TimeSpan.FromMinutes(1);
             var (token, payload) = server.TokenMaker.CreateToken(body.Username, duration);
 
             // response
@@ -27,7 +27,7 @@ namespace Api
             return;
         }
 
-        public static async Task TestUser(HttpContext ctx)
+        public static async Task TestUser(this Server server, HttpResponse response, HttpContext ctx)
         {
             var rsp = new { message = "test" };
             Handler.HandleResponseJson(ctx, StatusCodes.Status200OK, rsp);
