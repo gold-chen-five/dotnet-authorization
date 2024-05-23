@@ -14,7 +14,7 @@ namespace Token.PasetoMaker
             var seed = Encoding.UTF8.GetBytes(symmetricKey);
             if (seed.Length != 32)
             {
-                throw new Exception("seed length should be 32 length !");
+                throw new Exception("seed length should be 32 length!");
             }
             var pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
             _pasetoKey = pasetoBuilder.GenerateAsymmetricKeyPair(seed);
@@ -40,7 +40,7 @@ namespace Token.PasetoMaker
 
         public Payload VerifyToken(string token)
         {
-            if(string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
                 throw new Exception("Token validation failed.");
             }
@@ -60,15 +60,46 @@ namespace Token.PasetoMaker
                 throw new Exception("Token validation failed.");
             }
 
-            // Deserialize the PasetoPayload into Payload
+            // Deserialize the PasetoPayload to Payload
             var pasetoPayload = result.Paseto.Payload;
-            
-            var payloadJson = JsonSerializer.Serialize(pasetoPayload);
-            Console.WriteLine(payloadJson);
-            var payload = JsonSerializer.Deserialize<Payload>(payloadJson);
-            //var payload = JsonSerializer.Deserialize<Payload>(payloadJson);
+            var isChecked = IsCheckedPasetoPayload(pasetoPayload, out var p);
+            if (!isChecked)
+            {
+                throw new Exception("Payload missing.");
+            }
 
+            var payload = PayloadUtility.ParsePayload(p.Id, p.Username, p.Iat, p.Exp);
             return payload;
+        }
+
+        private struct CheckPayload
+        {
+            public object Id { get; set; }
+            public object Username { get; set; }
+            public object Iat { get; set; }
+            public object Exp { get; set; }
+        }
+
+        private static bool IsCheckedPasetoPayload(PasetoPayload pasetoPayload, out CheckPayload payload)
+        {
+            payload = default;
+            if (
+                pasetoPayload.TryGetValue("sub", out var id) &&
+                pasetoPayload.TryGetValue("Username", out var username) &&
+                pasetoPayload.TryGetValue("iat", out var iat) &&
+                pasetoPayload.TryGetValue("exp", out var exp)
+            )
+            {
+                payload = new CheckPayload
+                {
+                    Id = id,
+                    Username = username,
+                    Iat = iat,
+                    Exp = exp
+                };
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -1,19 +1,19 @@
 using Token;
 
-namespace Api
+namespace Api.Services
 {
     public static class User
     {
-        public record LoginBody(string Username, string Password);
+        private record LoginBody(string Username, string Password);
 
-        public record LoginResponse(string Token, Payload Payload);
+        private record LoginResponse(string Token, Payload Payload);
 
         public static async Task LoginUser(this Server server, HttpResponse response, HttpContext ctx)
         {
             var body = await ctx.Request.ReadFromJsonAsync<LoginBody>();
             if (body is null)
             {
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status400BadRequest, "Invalid login request");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status400BadRequest, "Invalid login request.");
                 return;
             }
 
@@ -29,8 +29,13 @@ namespace Api
 
         public static async Task TestUser(this Server server, HttpResponse response, HttpContext ctx)
         {
-            var rsp = new { message = "test" };
-            Handler.HandleResponseJson(ctx, StatusCodes.Status200OK, rsp);
+            var payload = ctx.Items["Payload"];
+            if(payload is null)
+            {
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status404NotFound, "Payload is not found.");
+                return;
+            }
+            Handler.HandleResponseJson(ctx, StatusCodes.Status200OK, payload);
             return;
         }
     }

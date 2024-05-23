@@ -15,13 +15,13 @@ namespace Api
         {
             if (!ctx.Request.Headers.TryGetValue("Authorization", out var authHeader))
             {
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Authorization header missing");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Authorization header missing.");
                 return;
             }
 
-            if (!authHeader.ToString().StartsWith("Bearer "))
+            if (!authHeader.ToString().StartsWith("Bearer"))
             {
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Invalid Authorization header");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Invalid Authorization header.");
                 return;
             }
 
@@ -31,15 +31,13 @@ namespace Api
             try
             {
                 var payload = server.TokenMaker.VerifyToken(token);
-                Console.WriteLine(payload.Username);
+                ctx.Items["Payload"] = payload;
             }
             catch(Exception err)
             {
-                Console.WriteLine(err);
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Token not correct");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, err.Message);
                 return;
             }
-            
 
             await next(ctx);
         }

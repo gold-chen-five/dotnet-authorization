@@ -7,6 +7,7 @@ namespace Api
             ctx.Response.StatusCode = code;
             await ctx.Response.WriteAsJsonAsync(rsp);
         }
+
         public static async void HandleResponseString(HttpContext ctx, int code, string rsp)
         {
             ctx.Response.StatusCode = code;

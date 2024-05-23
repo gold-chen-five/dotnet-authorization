@@ -19,5 +19,23 @@ namespace Token
 
             return new Payload(id, username, issuedAt, expiresAt);
         }
+
+        public static Payload ParsePayload(object idObj, object usernameObj, object iatObj, object expObj)
+        {
+            if (
+                Guid.TryParse(idObj?.ToString(), out var id) && 
+                usernameObj is string username && 
+                DateTime.TryParse(iatObj?.ToString(), out var iat) && 
+                DateTime.TryParse(expObj?.ToString(), out var exp)
+            )
+            {
+                Payload payload = new(id, username, iat, exp);
+                return payload;
+            }
+            else
+            {
+                throw new Exception("Payload contains invalid types.");
+            }
+        }
     }
 }
