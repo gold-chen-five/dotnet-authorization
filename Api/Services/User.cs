@@ -13,7 +13,7 @@ namespace Api.Services
             var body = await ctx.Request.ReadFromJsonAsync<LoginBody>();
             if (body is null)
             {
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status400BadRequest, "Invalid login request");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status400BadRequest, "Invalid login request.");
                 return;
             }
 
