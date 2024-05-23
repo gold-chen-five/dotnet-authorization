@@ -32,7 +32,7 @@ namespace Api.Services
             var payload = ctx.Items["Payload"];
             if(payload is null)
             {
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status404NotFound, "Payload not found.");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status404NotFound, "Payload is not found.");
                 return;
             }
             Handler.HandleResponseJson(ctx, StatusCodes.Status200OK, payload);
