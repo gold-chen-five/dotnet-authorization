@@ -1,6 +1,6 @@
 using Token;
 
-namespace Api
+namespace Api.Services
 {
     public static class User
     {
@@ -29,8 +29,13 @@ namespace Api
 
         public static async Task TestUser(this Server server, HttpResponse response, HttpContext ctx)
         {
-            var rsp = new { message = "test" };
-            Handler.HandleResponseJson(ctx, StatusCodes.Status200OK, rsp);
+            var payload = ctx.Items["Payload"];
+            if(payload is null)
+            {
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status404NotFound, "Payload not found.");
+                return;
+            }
+            Handler.HandleResponseJson(ctx, StatusCodes.Status200OK, payload);
             return;
         }
     }

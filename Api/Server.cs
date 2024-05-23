@@ -1,5 +1,5 @@
+using Api.Services;
 using Token;
-using Token.PasetoMaker;
 
 namespace Api
 {

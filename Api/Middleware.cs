@@ -31,12 +31,11 @@ namespace Api
             try
             {
                 var payload = server.TokenMaker.VerifyToken(token);
-                Console.WriteLine(payload.Username);
+                ctx.Items["Payload"] = payload;
             }
             catch(Exception err)
             {
-                Console.WriteLine(err);
-                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Token not correct");
+                Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, err.Message);
                 return;
             }
 

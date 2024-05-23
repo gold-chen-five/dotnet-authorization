@@ -60,15 +60,47 @@ namespace Token.PasetoMaker
                 throw new Exception("Token validation failed.");
             }
 
-            // Deserialize the PasetoPayload into Payload
+            // Deserialize the PasetoPayload to Payload
             var pasetoPayload = result.Paseto.Payload;
-            
-            var payloadJson = JsonSerializer.Serialize(pasetoPayload);
-            Console.WriteLine(payloadJson);
-            var payload = JsonSerializer.Deserialize<Payload>(payloadJson);
-            //var payload = JsonSerializer.Deserialize<Payload>(payloadJson);
+            if(IsCheckedPasetoPayload(pasetoPayload, out var p))
+            {
+                var payload = PayloadUtility.ParsePayload(p.Id, p.Username, p.Iat, p.Exp);
+                return payload;
+            }
+            else
+            {
+                throw new Exception("Payload missing.");
+            }
+        }
 
-            return payload;
+        private struct CheckPayload
+        {
+           public object Id { get; set;}
+           public object Username { get; set;}
+           public object Iat { get; set;}
+           public object Exp { get; set;}
+        }
+
+        private static bool IsCheckedPasetoPayload(PasetoPayload pasetoPayload , out CheckPayload payload)
+        {
+            payload = default;
+            if(
+                pasetoPayload.TryGetValue("sub", out var id) && 
+                pasetoPayload.TryGetValue("Username", out var username) &&
+                pasetoPayload.TryGetValue("iat", out var iat) && 
+                pasetoPayload.TryGetValue("exp", out var exp) 
+            )
+            {
+                payload = new CheckPayload
+                {
+                    Id = id,
+                    Username = username,
+                    Iat = iat,
+                    Exp = exp
+                };
+                return true;
+            }
+            return false;
         }
     }
 }
