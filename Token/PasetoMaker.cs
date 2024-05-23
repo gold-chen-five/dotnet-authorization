@@ -62,8 +62,7 @@ namespace Token.PasetoMaker
 
             // Deserialize the PasetoPayload to Payload
             var pasetoPayload = result.Paseto.Payload;
-            var isChecked = IsCheckedPasetoPayload(pasetoPayload, out var p);
-            if (!isChecked)
+            if (!IsCheckedPasetoPayload(pasetoPayload, out var p))
             {
                 throw new Exception("Payload missing.");
             }
