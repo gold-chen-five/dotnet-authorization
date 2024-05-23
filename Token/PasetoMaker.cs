@@ -14,7 +14,7 @@ namespace Token.PasetoMaker
             var seed = Encoding.UTF8.GetBytes(symmetricKey);
             if (seed.Length != 32)
             {
-                throw new Exception("seed length should be 32 length !");
+                throw new Exception("seed length should be 32 length!");
             }
             var pasetoBuilder = new PasetoBuilder().UseV4(Purpose.Public);
             _pasetoKey = pasetoBuilder.GenerateAsymmetricKeyPair(seed);
