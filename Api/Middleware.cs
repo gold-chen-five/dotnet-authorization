@@ -1,17 +1,17 @@
 
 namespace Api
 {
-    public partial class Server
+    public static class Middleware
     {
-        public void SetupMiddleware()
+        public static void SetupMiddleware(this Server server)
         {
-            _app.UseWhen(
+            server.App.UseWhen(
                 context => context.Request.Path.StartsWithSegments("/api"),
-                app => app.Use(AuthorizationMiddleware)
+                app => app.Use((ctx, next) => server.AuthorizationMiddleware(ctx, next))
             );
         }
 
-        private async Task AuthorizationMiddleware(HttpContext ctx, RequestDelegate next)
+        private static async Task AuthorizationMiddleware(this Server server, HttpContext ctx, RequestDelegate next)
         {
             if (!ctx.Request.Headers.TryGetValue("Authorization", out var authHeader))
             {
@@ -30,7 +30,7 @@ namespace Api
             // verify token
             try
             {
-                var payload = _tokenMaker.VerifyToken(token);
+                var payload = server.TokenMaker.VerifyToken(token);
                 Console.WriteLine(payload.Username);
             }
             catch(Exception err)
