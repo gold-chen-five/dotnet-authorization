@@ -1,17 +1,17 @@
 
 namespace Api
 {
-    public static class Middleware
+    public partial class Server
     {
-        public static void SetupMiddleware(this Server server)
+        public void SetupMiddleware()
         {
-            server.App.UseWhen(
+            _app.UseWhen(
                 context => context.Request.Path.StartsWithSegments("/api"),
-                app => app.Use((ctx, next) => server.AuthorizationMiddleware(ctx, next))
+                app => app.Use(AuthorizationMiddleware)
             );
         }
 
-        private static async Task AuthorizationMiddleware(this Server server, HttpContext ctx, RequestDelegate next)
+        private async Task AuthorizationMiddleware(HttpContext ctx, RequestDelegate next)
         {
             if (!ctx.Request.Headers.TryGetValue("Authorization", out var authHeader))
             {
@@ -19,7 +19,7 @@ namespace Api
                 return;
             }
 
-            if (!authHeader.ToString().StartsWith("Bearer "))
+            if (!authHeader.ToString().StartsWith("Bearer"))
             {
                 Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Invalid Authorization header");
                 return;
@@ -30,7 +30,7 @@ namespace Api
             // verify token
             try
             {
-                var payload = server.TokenMaker.VerifyToken(token);
+                var payload = _tokenMaker.VerifyToken(token);
                 Console.WriteLine(payload.Username);
             }
             catch(Exception err)
@@ -39,7 +39,6 @@ namespace Api
                 Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, "Token not correct");
                 return;
             }
-            
 
             await next(ctx);
         }
