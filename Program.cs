@@ -1,5 +1,7 @@
 using Api;
+using DotNetEnv;
 
-// var server = App.NewServer(args);
+Env.Load("app.env");
+
 var server = ServerBuilder.NewServer(args);
 server.Start();

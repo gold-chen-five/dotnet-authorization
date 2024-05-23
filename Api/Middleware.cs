@@ -33,7 +33,7 @@ namespace Api
                 var payload = server.TokenMaker.VerifyToken(token);
                 ctx.Items["Payload"] = payload;
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 Handler.HandleErrorResponse(ctx, StatusCodes.Status401Unauthorized, err.Message);
                 return;

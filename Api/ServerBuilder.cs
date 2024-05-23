@@ -1,4 +1,5 @@
 using Token.PasetoMaker;
+using DotNetEnv;
 
 namespace Api
 {
@@ -7,7 +8,9 @@ namespace Api
         public static Server NewServer(string[] args)
         {
             var app = SetupApp(args);
-            string symmetricKey = "12345678901234567890123456789012";
+
+            string symmetricKey = Environment.GetEnvironmentVariable("TOKEN_SYMMETRIC_KEY") ?? throw new Exception("SymmetricKey not found");
+            Console.WriteLine(symmetricKey);
             PasetoMaker tokenMaker = new(symmetricKey);
             Server server = new(app, tokenMaker);
             server.SetupRouter();
