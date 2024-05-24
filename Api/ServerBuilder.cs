@@ -1,5 +1,5 @@
 using Token.PasetoMaker;
-using DotNetEnv;
+using Util;
 
 namespace Api
 {
@@ -9,9 +9,11 @@ namespace Api
         {
             var app = SetupApp(args);
 
-            string symmetricKey = Environment.GetEnvironmentVariable("TOKEN_SYMMETRIC_KEY") ?? throw new Exception("SymmetricKey not found");
-            Console.WriteLine(symmetricKey);
+            // create token maker
+            string symmetricKey = app.Configuration["SymmetricKey"] ?? throw new Exception("SymmetricKey not found");
             PasetoMaker tokenMaker = new(symmetricKey);
+
+            // create server
             Server server = new(app, tokenMaker);
             server.SetupRouter();
             server.SetupSwagger();
@@ -23,6 +25,8 @@ namespace Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            Config.LoadEnv(builder);
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -32,5 +36,7 @@ namespace Api
 
             return app;
         }
+
+        
     }
 }

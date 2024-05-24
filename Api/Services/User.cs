@@ -18,7 +18,7 @@ namespace Api.Services
             }
 
             // create token
-            TimeSpan duration = TimeSpan.FromMinutes(1);
+            TimeSpan duration = TimeSpan.FromMinutes(15);
             var (token, payload) = server.TokenMaker.CreateToken(body.Username, duration);
 
             // response

@@ -20,6 +20,7 @@ namespace Token
             return new Payload(id, username, issuedAt, expiresAt);
         }
 
+        // Switch obj to Payload type.
         public static Payload ParsePayload(object idObj, object usernameObj, object iatObj, object expObj)
         {
             if (
