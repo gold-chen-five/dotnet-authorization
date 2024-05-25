@@ -1,7 +1,7 @@
 
 namespace Token
 {
-    public readonly struct Payload(Guid ID, string Username, DateTime IssuedAt, DateTime ExpiresAt)
+    public class Payload(Guid ID, string Username, DateTime IssuedAt, DateTime ExpiresAt)
     {
         public Guid ID { get; } = ID;
         public string Username { get; } = Username;
@@ -24,9 +24,9 @@ namespace Token
         public static Payload ParsePayload(object idObj, object usernameObj, object iatObj, object expObj)
         {
             if (
-                Guid.TryParse(idObj?.ToString(), out var id) && 
-                usernameObj is string username && 
-                DateTime.TryParse(iatObj?.ToString(), out var iat) && 
+                Guid.TryParse(idObj?.ToString(), out var id) &&
+                usernameObj is string username &&
+                DateTime.TryParse(iatObj?.ToString(), out var iat) &&
                 DateTime.TryParse(expObj?.ToString(), out var exp)
             )
             {

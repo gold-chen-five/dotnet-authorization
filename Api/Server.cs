@@ -1,12 +1,14 @@
 using Api.Services;
 using Token;
+using Util;
 
 namespace Api
 {
-    public class Server(WebApplication app, IMaker tokenMaker)
+    public class Server(WebApplication app, IMaker tokenMaker, Config.Configuration config)
     {
         public readonly WebApplication App = app;
         public readonly IMaker TokenMaker = tokenMaker;
+        public readonly Config.Configuration Config = config;
     }
 
     public static class ExtensionServer
