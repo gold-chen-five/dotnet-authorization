@@ -6,8 +6,14 @@ namespace Api;
 public static class ServerBuilder
 {
     public static Server NewServer(string[] args)
-    {
-        var app = SetupApp(args);
+    {   
+        var builder = WebApplication.CreateBuilder(args);
+        
+        // load env
+        Config.LoadEnv(builder);
+
+        // setup app
+        var app = SetupApp(builder);
 
         var config = app.Services.GetRequiredService<IOptions<Config.Configuration>>().Value;
 
@@ -22,12 +28,8 @@ public static class ServerBuilder
         return server;
     }
 
-    private static WebApplication SetupApp(string[] args)
+    private static WebApplication SetupApp(WebApplicationBuilder builder)
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        // load env
-        Config.LoadEnv(builder);
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
