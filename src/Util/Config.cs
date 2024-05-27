@@ -23,7 +23,6 @@ public static class Config
         // Bind configuration to a strongly-typed class
         builder.Services.Configure<Configuration>(builder.Configuration);
 
-
     }
 
 }

@@ -3,12 +3,12 @@ using Xunit;
 namespace Util.Tests;
 public class RandomTests
 {
-    [Fact]
-    public void RandomStringTest()
+    [Theory]
+    [InlineData(10)]
+    [InlineData(20)]
+    [InlineData(100)]
+    public void RandomString_NumberGreaterThanZero_ReturnRandomStringMatchLength(int length)
     {
-        // Arrange
-        int length = 10;
-
         // Act
         string result = Rand.RandomString(length);
 
@@ -16,12 +16,11 @@ public class RandomTests
         Assert.Equal(length, result.Length);
     }
 
-    [Fact]
-    public void RandomString_ShouldThrowArgumentException_ForNonPositiveLength()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void RandomString_NumberLowerThanOne_ReturnException(int length)
     {
-        // Arrange
-        int length = 0;
-
         // Act & Assert
         Assert.Throws<ArgumentException>(() => Rand.RandomString(length));
     }

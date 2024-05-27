@@ -20,4 +20,9 @@ public static class Rand
 
         return new string(result);
     }
+
+    public static string RandomUser()
+    {
+        return RandomString(6);
+    }
 }

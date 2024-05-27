@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Options;
-using Token.PasetoMaker;
+using Token;
 using Util;
-using Api.Val;
 
 namespace Api;
 public static class ServerBuilder

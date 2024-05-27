@@ -2,7 +2,7 @@ using System.Text;
 using Paseto;
 using Paseto.Builder;
 
-namespace Token.PasetoMaker;
+namespace Token;
 public class PasetoMaker : IMaker
 {
     private readonly Paseto.Cryptography.Key.PasetoAsymmetricKeyPair _pasetoKey;
