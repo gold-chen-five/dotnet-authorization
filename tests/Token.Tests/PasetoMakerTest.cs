@@ -12,7 +12,7 @@ public class PasetoMakerTest
 
     [Theory]
     [InlineData(32)]
-     public void PasetoMaker_ShouldNotThrowExceptionOnCreation(int symmetricKeyLength)
+    public void PasetoMaker_ShouldNotThrowExceptionOnCreation(int symmetricKeyLength)
     {
         // Arrange
         string symmetricKey = Util.Rand.RandomString(symmetricKeyLength);

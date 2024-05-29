@@ -3,8 +3,6 @@ using Api.Val;
 namespace Api.Services;
 public static class User
 {
-
-
     private record LoginResponse(string Token, Payload Payload);
 
     public static async Task LoginUser(this Server server, HttpResponse response, HttpContext ctx)

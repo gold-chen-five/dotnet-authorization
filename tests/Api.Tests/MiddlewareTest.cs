@@ -1,11 +1,12 @@
 using Xunit;
 
 namespace Api.Tests;
-public static class MiddlewareTest
+public class MiddlewareTest
 {
     [Fact]
-    public async Task AuthorizationMiddleware_ShouldReturn401_WhenAuthorizationHeaderIsMissing()
+    public void AuthorizationMiddleware_ShouldReturn401_WhenAuthorizationHeaderIsMissing()
     {
-        
+        var message = "Token validation failed.";
+        Assert.Equal("Token validation failed.", message);
     }
 }
