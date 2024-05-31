@@ -14,7 +14,6 @@ public static class ExtensionServer
 {
     public static void SetupService(this Server server)
     {
-        Console.WriteLine("start dev");
         server.App.MapGrpcService<GreeterService>();
         server.App.MapGet("/", () => "grpc start");
     }

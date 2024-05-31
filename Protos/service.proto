@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+option csharp_namespace = "Protos";
+
+import "Protos/greet.proto";
+import "Protos/login_user.proto";
+
+// The greeting service definition.
+service Auth {
+    // Sends a greeting
+    rpc SayHello (HelloRequest) returns (HelloReply);
+
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse);
+}
