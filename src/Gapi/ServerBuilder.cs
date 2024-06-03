@@ -1,17 +1,25 @@
-using Microsoft.Extensions.Options;
 using Token;
 using Util;
 namespace Gapi;
+using Gapi.Services;
 public static class ServerBuilder
 {
-    public static Server NewServer(string[] args)
+    public static WebApplication NewServer(string[] args)
     {   
         var builder = WebApplication.CreateBuilder(args);
         
         // load env
-        Config.LoadEnv(builder);
+        var config = Config.LoadEnv(builder);
 
-        // Add services to the container.
+        // create token maker
+        string symmetricKey = config.TOKEN_SYMMETRIC_KEY ?? throw new Exception("SymmetricKey not found");
+        PasetoMaker tokenMaker = new(symmetricKey);
+
+        // DI 
+        builder.Services.AddSingleton<IMaker>(tokenMaker);
+        builder.Services.AddSingleton(config);
+        
+        // Add gRPC.
         builder.Services.AddGrpc();
         builder.Services.AddGrpcReflection();
         
@@ -22,17 +30,20 @@ public static class ServerBuilder
         {
             app.MapGrpcReflectionService();
         }
-
-
-        var config = app.Services.GetRequiredService<IOptions<Config.Configuration>>().Value;
-
-        // create token maker
-        string symmetricKey = config.TOKEN_SYMMETRIC_KEY ?? throw new Exception("SymmetricKey not found");
-        PasetoMaker tokenMaker = new(symmetricKey);
-
-        Server server = new(app, tokenMaker, config);
         
-        server.SetupService();
-        return server;
+        app.SetupService();
+       
+        return app;
+    }
+
+    public static void SetupService(this WebApplication app)
+    {
+        app.MapGrpcService<AuthService>();
+        app.MapGet("/", () => "grpc start");
+    }
+
+    public static void Start(this WebApplication app)
+    {
+        app.Run();
     }
 }
