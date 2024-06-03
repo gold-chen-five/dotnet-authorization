@@ -10,19 +10,26 @@ public static class Config
         public int TOKEN_DURATION_MINUTES { get; set; }
     }
 
-    public static void LoadEnv(WebApplicationBuilder builder)
+    public static Configuration LoadEnv(WebApplicationBuilder builder)
     {
         if (builder is null) throw new Exception("Builder not found");
 
         // Load ENV
         Env.Load("app.env");
 
-        // Add environment variables to configuration
-        builder.Configuration.AddEnvironmentVariables();
+        var config = new Configuration
+        {
+            TOKEN_SYMMETRIC_KEY = Env.GetString("TOKEN_SYMMETRIC_KEY"),
+            TOKEN_DURATION_MINUTES = Env.GetInt("TOKEN_DURATION_MINUTES")
+        };
 
-        // Bind configuration to a strongly-typed class
-        builder.Services.Configure<Configuration>(builder.Configuration);
+        return config;
+        // // Add environment variables to configuration
+        // builder.Configuration.AddEnvironmentVariables();
 
+        // // Bind configuration to a strongly-typed class
+        // builder.Services.Configure<Configuration>(builder.Configuration);
+        
     }
 
 }

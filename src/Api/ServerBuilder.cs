@@ -10,12 +10,10 @@ public static class ServerBuilder
         var builder = WebApplication.CreateBuilder(args);
         
         // load env
-        Config.LoadEnv(builder);
+        var config = Config.LoadEnv(builder);
 
         // setup app
         var app = SetupApp(builder);
-
-        var config = app.Services.GetRequiredService<IOptions<Config.Configuration>>().Value;
 
         // create token maker
         string symmetricKey = config.TOKEN_SYMMETRIC_KEY ?? throw new Exception("SymmetricKey not found");
